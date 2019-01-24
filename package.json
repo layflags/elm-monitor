@@ -1,0 +1,24 @@
+{
+  "name": "elm-monitor",
+  "version": "0.0.1",
+  "description": "Monitor your elm program with redux-devtools",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/layflags/elm-monitor.git"
+  },
+  "keywords": [
+    "elm",
+    "redux-devtools",
+    "debugging"
+  ],
+  "author": "Lay Flags <code@layfla.gs>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/layflags/elm-monitor/issues"
+  },
+  "homepage": "https://github.com/layflags/elm-monitor#readme"
+}
