@@ -2,9 +2,14 @@
   "name": "elm-monitor",
   "version": "0.0.1",
   "description": "Monitor your elm program with redux-devtools",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "source": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:parser": "pegjs src/parser.pegjs && replace 'module.exports =' 'export default' src/parser.js",
+    "build": "npm run build:parser && microbundle",
+    "dev": "npm run build:parser && microbundle watch",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -20,5 +25,10 @@
   "bugs": {
     "url": "https://github.com/layflags/elm-monitor/issues"
   },
-  "homepage": "https://github.com/layflags/elm-monitor#readme"
+  "homepage": "https://github.com/layflags/elm-monitor#readme",
+  "devDependencies": {
+    "microbundle": "^0.9.0",
+    "pegjs": "^0.10.0",
+    "replace": "^1.0.1"
+  }
 }
