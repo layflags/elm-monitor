@@ -1,12 +1,14 @@
 import Parser from './parser';
 
+const isCtor = a => typeof a === 'string' && /^⟨.+⟩$/.test(a)
+
 const expandType = ([a, b, ...rest]) => {
-  if (typeof a !== 'string') throw Error('`a` not a string');
-  if (Array.isArray(b) && typeof b[0] === 'string' && rest.length === 0) {
-    return expandType([`${a}:${b[0]}`, ...b.slice(1)]);
-  }
-  if (typeof b === 'string' && rest.length === 0) {
+  if (!isCtor(a)) throw Error('`a` not a type string');
+  if (isCtor(b) && rest.length === 0) {
     return [`${a}:${b}`];
+  }
+  if (Array.isArray(b) && isCtor(b[0]) && b.length <= 2 && rest.length === 0) {
+    return expandType([`${a}:${b[0]}`, ...b.slice(1)]);
   }
   return [a, b, ...rest];
 };
