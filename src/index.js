@@ -37,7 +37,7 @@ const install = () => {
         const [, type, content] = match;
         switch (type) {
           case 'init':
-            devtools.send('@@INIT', Parser.parse(content));
+            devtools.init(Parser.parse(content));
             break;
           case 'update':
             {
