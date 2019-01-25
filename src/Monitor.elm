@@ -1,4 +1,4 @@
-module Monitor exposing (application)
+module Monitor exposing (application, document, element, sandbox, worker)
 
 import Browser
 import Browser.Navigation
