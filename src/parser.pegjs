@@ -26,6 +26,7 @@ value
   / list
   / number
   / string
+  / character
   / ctor_call_wrapped
   / ctor_call
   / ctor
@@ -150,6 +151,9 @@ zero
 
 string "string"
   = quotation_mark chars:char* quotation_mark { return chars.join(""); }
+
+character "character"
+  = "'" c:char "'" { return c; }
 
 char
   = unescaped
