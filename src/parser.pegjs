@@ -30,13 +30,12 @@ value
   / ctor_call_wrapped
   / ctor_call
   / ctor
-  / function
+  / internal
   / tuple
   / unit
 
 false = "False" { return false; }
 true  = "True"  { return true;  }
-function = "<function>"
 unit = "()" { return null; }
 
 
@@ -154,6 +153,9 @@ string "string"
 
 character "character"
   = "'" c:char "'" { return c; }
+
+internal "internal"
+  = "<" [^>]+ ">" { return text(); }
 
 char
   = unescaped
