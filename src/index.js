@@ -2,7 +2,9 @@ import Parser from './parser'
 
 const isCtor = a => typeof a === 'string' && /^⟨.+⟩$/.test(a)
 
-const expandType = ([a, b, ...rest]) => {
+const expandType = data => {
+  if (isCtor(data)) return [data]
+  const [a, b, ...rest] = data
   if (!isCtor(a)) throw Error('`a` not a type string')
   if (isCtor(b) && rest.length === 0) {
     return [`${a}:${b}`]
