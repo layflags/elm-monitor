@@ -9,7 +9,8 @@
     "build:parser": "pegjs src/parser.pegjs && replace 'module.exports =' 'export default' src/parser.js",
     "build": "npm run build:parser && microbundle",
     "dev": "npm run build:parser && microbundle watch",
-    "prepublishOnly": "npm run build"
+    "lint": "prettier-standard 'src/**/*.js' && standard",
+    "prepublishOnly": "npm run lint && npm run build"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,8 @@
   "devDependencies": {
     "microbundle": "^0.9.0",
     "pegjs": "^0.10.0",
-    "replace": "^1.0.1"
+    "prettier-standard": "^9.1.1",
+    "replace": "^1.0.1",
+    "standard": "^12.0.1"
   }
 }
