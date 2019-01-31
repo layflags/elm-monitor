@@ -184,11 +184,6 @@ formatCtor str =
     "⟨" ++ str ++ "⟩"
 
 
-ctorArgs : Parser (List JE.Value)
-ctorArgs =
-    loop [] ctorArgsHelp
-
-
 ctorArgsHelp : List JE.Value -> Parser (Step (List JE.Value) (List JE.Value))
 ctorArgsHelp state =
     succeed identity
@@ -212,11 +207,19 @@ prependJsonValue head tail =
     JE.list identity <| head :: tail
 
 
-union : Parser JE.Value
-union =
+ctorWithArgs : Parser JE.Value
+ctorWithArgs =
     succeed prependJsonValue
         |= ctor
-        |= ctorArgs
+        |= loop [] ctorArgsHelp
+
+
+union : Parser JE.Value
+union =
+    oneOf
+        [ ctorWithArgs
+        , ctor
+        ]
 
 
 

@@ -1,9 +1,10 @@
 port module Main exposing (main)
 
 import Json.Encode as JE
+import OutputParser
 
 
-port sendParsedData : JE.Value -> Cmd Never
+port sendParsedData : JE.Value -> Cmd msg
 
 
 main : Program String () Never
@@ -34,6 +35,6 @@ update msg model =
     ( model, Cmd.none )
 
 
-subscriptios : () -> Sub Never
-subscriptios _ =
+subscriptions : () -> Sub Never
+subscriptions _ =
     Sub.none
