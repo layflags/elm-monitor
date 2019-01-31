@@ -197,8 +197,7 @@ ctorArgsHelp state =
             , succeed
                 (\call -> Loop (call :: state))
                 |= value
-            , succeed ()
-                |> map (\_ -> Done (List.reverse state))
+            , succeed (Done (List.reverse state))
             ]
 
 
