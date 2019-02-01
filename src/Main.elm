@@ -7,7 +7,14 @@ import OutputParser
 port sendParsedData : JE.Value -> Cmd msg
 
 
-main : Program String () Never
+port listenToInput : (String -> msg) -> Sub msg
+
+
+type Msg
+    = GotInput String
+
+
+main : Program () () Msg
 main =
     Platform.worker
         { init = init
@@ -16,25 +23,27 @@ main =
         }
 
 
-init : String -> ( (), Cmd Never )
-init input =
-    case OutputParser.parse input of
-        Ok data ->
-            ( (), sendParsedData data )
-
-        Err err ->
-            let
-                _ =
-                    Debug.log "OMG!" err
-            in
-            ( (), Cmd.none )
+init : () -> ( (), Cmd Msg )
+init _ =
+    ( (), Cmd.none )
 
 
-update : Never -> () -> ( (), Cmd Never )
+update : Msg -> () -> ( (), Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        GotInput input ->
+            case OutputParser.parse input of
+                Ok data ->
+                    ( (), sendParsedData data )
+
+                Err err ->
+                    --let
+                    --_ =
+                    --Debug.log "OMG!" err
+                    --in
+                    ( (), Cmd.none )
 
 
-subscriptions : () -> Sub Never
+subscriptions : () -> Sub Msg
 subscriptions _ =
-    Sub.none
+    listenToInput GotInput

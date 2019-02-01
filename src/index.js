@@ -1,6 +1,15 @@
-import Parser from './parser'
+const Elm = require('./parser')
 
 const isCtor = a => typeof a === 'string' && /^⟨.+⟩$/.test(a)
+
+const app = Elm.Main.worker();
+
+const parse = (content, onSuccess) => {
+  return new Promise(resolve => {
+    app.ports.sendParsedData.subscribe(resolve)
+    app.ports.listenToInput.send(content);
+  })
+}
 
 const expandType = data => {
   if (isCtor(data)) return [data]
@@ -31,19 +40,23 @@ const install = () => {
       }
     })
     const consoleLog = window.console.log.bind(window.console)
-    window.console.log = (...args) => {
+    window.console.log = async (...args) => {
       const match =
         typeof args[0] === 'string' &&
         args[0].match(/^\[Monitor:(init|update)\]: (.+)$/)
       if (match) {
         const [, type, content] = match
+
         switch (type) {
           case 'init':
-            devtools.init(Parser.parse(content))
+            {
+              const result = await parse(content);
+              devtools.init(result)
+            }
             break
           case 'update':
             {
-              const [action, state] = Parser.parse(content)
+              const [action, state] = await parse(content)
               devtools.send(toFSA(action), state)
             }
             break
