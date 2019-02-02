@@ -201,24 +201,26 @@ ctorArgsHelp state =
             ]
 
 
-prependJsonValue : JE.Value -> List JE.Value -> JE.Value
-prependJsonValue head tail =
-    JE.list identity <| head :: tail
-
-
-ctorWithArgs : Parser JE.Value
+ctorWithArgs : Parser (List JE.Value)
 ctorWithArgs =
-    succeed prependJsonValue
+    succeed (::)
         |= ctor
         |= loop [] ctorArgsHelp
 
 
 union : Parser JE.Value
 union =
-    oneOf
-        [ ctorWithArgs
-        , ctor
-        ]
+    let
+        -- turn ctor only to String, ctor with args to array
+        ensureAtLeastOne pieces =
+            case pieces of
+                [ head ] ->
+                    head
+
+                _ ->
+                    JE.list identity pieces
+    in
+    map ensureAtLeastOne ctorWithArgs
 
 
 

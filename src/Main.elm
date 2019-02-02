@@ -2,6 +2,7 @@ port module Main exposing (main)
 
 import Json.Encode as JE
 import OutputParser
+import Parser as P
 
 
 port sendParsedData : JE.Value -> Cmd msg
@@ -39,7 +40,7 @@ update msg model =
                 Err err ->
                     --let
                     --_ =
-                    --Debug.log "OMG!" err
+                    --Debug.log "DeadEnds" err
                     --in
                     ( (), Cmd.none )
 

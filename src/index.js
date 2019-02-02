@@ -2,14 +2,14 @@ const Elm = require('./parser')
 
 const isCtor = a => typeof a === 'string' && /^⟨.+⟩$/.test(a)
 
-const app = Elm.Main.worker();
+const app = Elm.Main.init();
 
-const parse = (content, onSuccess) => {
-  return new Promise(resolve => {
+const parse = content =>
+  new Promise(resolve => {
     app.ports.sendParsedData.subscribe(resolve)
     app.ports.listenToInput.send(content);
-  })
-}
+  });
+
 
 const expandType = data => {
   if (isCtor(data)) return [data]
