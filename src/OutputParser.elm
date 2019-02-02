@@ -7,26 +7,6 @@ import Parser exposing (..)
 import Set
 
 
-recordStr =
-    """
-        { fragment = Nothing
-        , host = "localhost"
-        , path = "/blog"
-        , port_ = Just 8080
-        , protocol = Http
-        , query = Nothing
-        , peter = False
-        , num = 4.5
-        , int = 1
-        , list = [1, 2, 3]
-        , unit = ()
-        , internal = <secret>
-        , tuple = (1, "assi", [1, 2, 3])
-        , union = Peter 3 Bool (Just 3)
-        }
-"""
-
-
 parse : String -> Result (List DeadEnd) JE.Value
 parse =
     Parser.run parser
@@ -240,6 +220,10 @@ value =
         , lazy (\() -> record)
         , lazy (\() -> list)
         ]
+
+
+
+-- FINAL PARSER
 
 
 parser : Parser JE.Value
