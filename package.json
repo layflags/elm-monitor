@@ -6,7 +6,8 @@
   "source": "src/index.js",
   "scripts": {
     "test": "elm-test src/**/*Test.elm",
-    "build:parser": "elm make src/Main.elm --optimize --output=src/parser.js && elm-minify src/parser.js --overwrite",
+    "build:parser": "npm run build:parser:elm && cp src/parser.js dist",
+    "build:parser:elm": "elm make src/Main.elm --optimize --output=src/parser.js && elm-minify src/parser.js --overwrite",
     "build": "npm run build:parser && microbundle",
     "dev": "npm run build:parser && microbundle watch",
     "lint": "prettier-standard 'src/**/*.js' && standard",
