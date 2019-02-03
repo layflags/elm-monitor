@@ -57,13 +57,16 @@ const install = () => {
         switch (type) {
           case 'init':
             {
-              const result = await parse(content, app)
+              const result = await parse(content, app).catch(console.error)
               devtools.init(result)
             }
             break
           case 'update':
             {
-              const [action, state] = await parse(content, app)
+              const [action, state] = await parse(content, app).catch(
+                console.error
+              )
+
               devtools.send(toFSA(action), state)
             }
             break
