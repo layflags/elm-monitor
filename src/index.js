@@ -2,15 +2,6 @@ const { Elm } = require('./parser')
 
 const isCtor = a => typeof a === 'string' && /^⟨.+⟩$/.test(a)
 
-const app = Elm.Main.init();
-
-const parse = content =>
-  new Promise(resolve => {
-    app.ports.sendParsedData.subscribe(resolve)
-    app.ports.listenToInput.send(content);
-  });
-
-
 const expandType = data => {
   if (isCtor(data)) return [data]
   const [a, b, ...rest] = data
@@ -31,8 +22,24 @@ const toFSA = action => {
     : { type }
 }
 
+const parse = (content, app) =>
+  new Promise((resolve, reject) => {
+    const onParsedData = result => {
+      if ('Ok' in result) {
+        resolve(result.Ok)
+      } else {
+        reject(result.Err)
+      }
+      app.ports.sendParsedData.unsubscribe(onParsedData)
+    }
+    app.ports.sendParsedData.subscribe(onParsedData)
+    app.ports.listenToInput.send(content)
+  })
+
 const install = () => {
   if (window.__REDUX_DEVTOOLS_EXTENSION__ && window.console) {
+    const app = Elm.Main.init()
+
     const devtools = window.__REDUX_DEVTOOLS_EXTENSION__.connect({
       features: {
         pause: true, // start/pause recording of dispatched actions
@@ -50,13 +57,13 @@ const install = () => {
         switch (type) {
           case 'init':
             {
-              const result = await parse(content);
+              const result = await parse(content, app)
               devtools.init(result)
             }
             break
           case 'update':
             {
-              const [action, state] = await parse(content)
+              const [action, state] = await parse(content, app)
               devtools.send(toFSA(action), state)
             }
             break
