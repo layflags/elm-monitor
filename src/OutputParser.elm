@@ -154,7 +154,7 @@ ctor =
     map (JE.string << formatCtor) <|
         variable
             { start = Char.isUpper
-            , inner = \c -> Char.isAlphaNum c || c == '_'
+            , inner = \c -> Char.isAlphaNum c || c == '_' || c == '.'
             , reserved = Set.empty
             }
 
