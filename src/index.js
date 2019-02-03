@@ -22,8 +22,9 @@ const toFSA = action => {
     : { type }
 }
 
-const parse = (content, app) =>
+const parse = content =>
   new Promise((resolve, reject) => {
+    const app = Elm.Main.init()
     const onParsedData = result => {
       if ('Ok' in result) {
         resolve(result.Ok)
@@ -32,14 +33,13 @@ const parse = (content, app) =>
       }
       app.ports.sendParsedData.unsubscribe(onParsedData)
     }
+
     app.ports.sendParsedData.subscribe(onParsedData)
     app.ports.listenToInput.send(content)
   })
 
 const install = () => {
   if (window.__REDUX_DEVTOOLS_EXTENSION__ && window.console) {
-    const app = Elm.Main.init()
-
     const devtools = window.__REDUX_DEVTOOLS_EXTENSION__.connect({
       features: {
         pause: true, // start/pause recording of dispatched actions
@@ -56,18 +56,19 @@ const install = () => {
 
         switch (type) {
           case 'init':
-            {
-              const result = await parse(content, app).catch(console.error)
+            try {
+              const result = await parse(content)
               devtools.init(result)
+            } catch (e) {
+              console.error(e)
             }
             break
           case 'update':
-            {
-              const [action, state] = await parse(content, app).catch(
-                console.error
-              )
-
+            try {
+              const [action, state] = await parse(content)
               devtools.send(toFSA(action), state)
+            } catch (e) {
+              console.error(e)
             }
             break
           default:
