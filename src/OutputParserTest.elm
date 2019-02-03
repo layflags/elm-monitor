@@ -70,4 +70,16 @@ suite =
             \() ->
                 parse recordStr
                     |> Expect.equal (Ok json)
+        , test "should parse some data" <|
+            \() ->
+                let
+                    data =
+                        "{ currentRoute = Just CurrentExpenses, footer = { copyrightYear = 2019, isMaximized = False, version = \"6.0.0 [DEV]\" }, header = { isYearMonthNavVisible = False }, page = Loading { authentication = Unknown, currentYearMonth = Nothing, expenseList = [], key = <function>, people = Dict.fromList [], timezone = Zone 0 [] } }"
+                in
+                case parse data of
+                    Ok _ ->
+                        Expect.pass
+
+                    Err err ->
+                        Expect.fail "Couldn't parse"
         ]
