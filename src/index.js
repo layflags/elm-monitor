@@ -1,4 +1,4 @@
-const Elm = require('./parser')
+const { Elm } = require('./parser')
 
 const isCtor = a => typeof a === 'string' && /^⟨.+⟩$/.test(a)
 
