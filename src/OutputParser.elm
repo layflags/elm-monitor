@@ -181,26 +181,32 @@ ctorArgsHelp state =
             ]
 
 
-ctorWithArgs : Parser (List JE.Value)
+type NonEmptyList a
+    = NonEmptyList a (List a)
+
+
+{-| turn ctor only to String, ctor with args to array
+-}
+nonEmptyListToValue : NonEmptyList JE.Value -> JE.Value
+nonEmptyListToValue nonEmptyList =
+    case nonEmptyList of
+        NonEmptyList head [] ->
+            head
+
+        NonEmptyList head tail ->
+            JE.list identity (head :: tail)
+
+
+ctorWithArgs : Parser (NonEmptyList JE.Value)
 ctorWithArgs =
-    succeed (::)
+    succeed NonEmptyList
         |= ctor
         |= loop [] ctorArgsHelp
 
 
 union : Parser JE.Value
 union =
-    let
-        -- turn ctor only to String, ctor with args to array
-        ensureAtLeastOne pieces =
-            case pieces of
-                [ head ] ->
-                    head
-
-                _ ->
-                    JE.list identity pieces
-    in
-    map ensureAtLeastOne ctorWithArgs
+    map nonEmptyListToValue ctorWithArgs
 
 
 
