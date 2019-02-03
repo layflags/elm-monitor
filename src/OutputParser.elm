@@ -134,15 +134,32 @@ internals =
 
 tuple : Parser JE.Value
 tuple =
-    sequence
-        { start = "("
-        , separator = ","
-        , end = ")"
-        , spaces = spaces
-        , item = value
-        , trailing = Forbidden
-        }
-        |> map (JE.list identity)
+    succeed
+        (\first second rest ->
+            JE.list identity (first :: second :: rest)
+        )
+        |. symbol "("
+        |. spaces
+        |= value
+        |. spaces
+        |. symbol ","
+        |. spaces
+        |= value
+        |. spaces
+        |= loop [] tupleRestHelp
+        |. symbol ")"
+
+
+tupleRestHelp : List JE.Value -> Parser (Step (List JE.Value) (List JE.Value))
+tupleRestHelp state =
+    oneOf
+        [ succeed
+            (\call -> Loop (call :: state))
+            |. symbol ","
+            |. spaces
+            |= value
+        , succeed (Done (List.reverse state))
+        ]
 
 
 
@@ -171,12 +188,12 @@ ctorArgsHelp state =
         |= oneOf
             [ succeed
                 (\call -> Loop (call :: state))
+                |= value
+            , succeed
+                (\call -> Loop (call :: state))
                 |. symbol "("
                 |= lazy (\_ -> union)
                 |. symbol ")"
-            , succeed
-                (\call -> Loop (call :: state))
-                |= value
             , succeed (Done (List.reverse state))
             ]
 
@@ -217,14 +234,14 @@ value : Parser JE.Value
 value =
     oneOf
         [ bool
-        , float
         , unit
         , string
         , internals
-        , lazy (\() -> union)
-        , lazy (\() -> tuple)
         , lazy (\() -> record)
         , lazy (\() -> list)
+        , backtrackable <| lazy (\() -> tuple)
+        , lazy (\() -> union)
+        , float
         ]
 
 

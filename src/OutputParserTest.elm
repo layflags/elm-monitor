@@ -60,7 +60,10 @@ suite =
                                 [ JE.string "⟨Peter⟩"
                                 , JE.int 3
                                 , JE.bool True
-                                , JE.list identity [ JE.string "⟨Just⟩", JE.int 3 ]
+                                , JE.list identity
+                                    [ JE.string "⟨Just⟩"
+                                    , JE.int 3
+                                    ]
                                 ]
                           )
                         ]
@@ -74,12 +77,18 @@ suite =
             \() ->
                 let
                     data =
-                        "{ currentRoute = Just CurrentExpenses, footer = { copyrightYear = 2019, isMaximized = False, version = \"6.0.0 [DEV]\" }, header = { isYearMonthNavVisible = False }, page = Loading { authentication = Unknown, currentYearMonth = Nothing, expenseList = [], key = <function>, people = Dict.fromList [], timezone = Zone 0 [] } }"
+                        """
+(GotHereAndNow (Zone 60 [],Posix 1549222093485),{ here = Zone 60 [], key = <function>, now = Posix 1549222093485, page = Home { url = { fragment = Nothing, host = "localhost", path = "/", port_ = Just 8080, protocol = Http, query = Nothing } } })
+                      """
                 in
                 case parse data of
                     Ok _ ->
                         Expect.pass
 
                     Err err ->
+                        let
+                            _ =
+                                Debug.log "err" err
+                        in
                         Expect.fail "Couldn't parse"
         ]
