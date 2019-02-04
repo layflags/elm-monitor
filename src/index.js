@@ -1,4 +1,4 @@
-import Parser from './parser'
+const { Elm } = require('./parser')
 
 const isCtor = a => typeof a === 'string' && /^⟨.+⟩$/.test(a)
 
@@ -22,6 +22,22 @@ const toFSA = action => {
     : { type }
 }
 
+const parse = content =>
+  new Promise((resolve, reject) => {
+    const app = Elm.Main.init()
+    const onParsedData = result => {
+      if ('Ok' in result) {
+        resolve(result.Ok)
+      } else {
+        reject(result.Err)
+      }
+      app.ports.sendParsedData.unsubscribe(onParsedData)
+    }
+
+    app.ports.sendParsedData.subscribe(onParsedData)
+    app.ports.listenToInput.send(content)
+  })
+
 const install = () => {
   if (window.__REDUX_DEVTOOLS_EXTENSION__ && window.console) {
     const devtools = window.__REDUX_DEVTOOLS_EXTENSION__.connect({
@@ -31,20 +47,28 @@ const install = () => {
       }
     })
     const consoleLog = window.console.log.bind(window.console)
-    window.console.log = (...args) => {
+    window.console.log = async (...args) => {
       const match =
         typeof args[0] === 'string' &&
         args[0].match(/^\[Monitor:(init|update)\]: (.+)$/)
       if (match) {
         const [, type, content] = match
+
         switch (type) {
           case 'init':
-            devtools.init(Parser.parse(content))
+            try {
+              const result = await parse(content)
+              devtools.init(result)
+            } catch (e) {
+              console.error(e)
+            }
             break
           case 'update':
-            {
-              const [action, state] = Parser.parse(content)
+            try {
+              const [action, state] = await parse(content)
               devtools.send(toFSA(action), state)
+            } catch (e) {
+              console.error(e)
             }
             break
           default:
