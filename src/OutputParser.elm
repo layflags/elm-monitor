@@ -24,6 +24,14 @@ string =
         |. symbol "\""
 
 
+char : Parser JE.Value
+char =
+    succeed JE.string
+        |. symbol "'"
+        |= (getChompedString <| chompWhile ((/=) '\''))
+        |. symbol "'"
+
+
 
 -- BOOL
 
@@ -235,6 +243,7 @@ value =
     oneOf
         [ bool
         , unit
+        , char
         , string
         , internals
         , lazy (\() -> record)

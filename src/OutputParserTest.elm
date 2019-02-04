@@ -91,4 +91,12 @@ suite =
                                 Debug.log "err" err
                         in
                         Expect.fail "Couldn't parse"
+        , test "can parse chars as well" <|
+            \() ->
+                parse "'a'"
+                    |> Expect.equal (Ok <| JE.string "a")
+        , test "chars can also be unicode points" <|
+            \() ->
+                parse "'🙂'"
+                    |> Expect.equal (Ok <| JE.string "🙂")
         ]
