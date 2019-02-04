@@ -39,7 +39,7 @@ Besides being able to monitor `Browser.application`, `Monitor.elm` additionally 
 
 ## How does it work under the hood?
 
-It's quite simple. `Monitor.elm` just logs the state on `init` as well as every action and resulting state on `update` to the browser console. `monitor.js` connects to redux-devtools, patches `console.log` to extract messages logged by `Monitor.elm`, parses and transforms the log messages using [PEG.js](https://pegjs.org/) and passes them over to redux-devtools.
+It's quite simple. `Monitor.elm` just logs the state on `init` as well as every action and resulting state on `update` to the browser console. `monitor.js` connects to redux-devtools, patches `console.log` to extract messages logged by `Monitor.elm`, parses and transforms the log messages using `elm/parser` (thx [@ChristophP](https://github.com/ChristophP)) and passes them over to redux-devtools.
 
 ## How does it map Elm to JS data structures?
 

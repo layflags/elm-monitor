@@ -11,7 +11,7 @@
     "build": "npm run build:parser && microbundle",
     "dev": "npm run build:parser && microbundle watch",
     "lint": "prettier-standard 'src/**/*.js' && standard",
-    "prepublishOnly": "npm run lint && npm run build"
+    "prepublishOnly": "npm run test && npm run lint && npm run build"
   },
   "repository": {
     "type": "git",
