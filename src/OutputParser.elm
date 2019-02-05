@@ -1,7 +1,6 @@
 module OutputParser exposing (parse)
 
 import Char
-import Html exposing (Html)
 import Json.Encode as JE
 import Parser exposing (..)
 import Set
@@ -22,6 +21,14 @@ string =
         |. symbol "\""
         |= (getChompedString <| chompWhile ((/=) '"'))
         |. symbol "\""
+
+
+char : Parser JE.Value
+char =
+    succeed JE.string
+        |. symbol "'"
+        |= (getChompedString <| chompWhile ((/=) '\''))
+        |. symbol "'"
 
 
 
@@ -235,6 +242,7 @@ value =
     oneOf
         [ bool
         , unit
+        , char
         , string
         , internals
         , lazy (\() -> record)

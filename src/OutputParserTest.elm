@@ -1,7 +1,6 @@
 module OutputParserTest exposing (suite)
 
-import Expect exposing (Expectation)
-import Fuzz exposing (Fuzzer, int, list, string)
+import Expect
 import Json.Encode as JE
 import OutputParser exposing (parse)
 import Test exposing (..)
@@ -14,6 +13,10 @@ suite =
             \() ->
                 parse "\"Peter\""
                     |> Expect.equal (Ok (JE.string "Peter"))
+        , test "should parse a char" <|
+            \() ->
+                parse "'x'"
+                    |> Expect.equal (Ok (JE.string "x"))
         , let
             recordStr =
                 """
