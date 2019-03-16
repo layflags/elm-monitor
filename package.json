@@ -1,6 +1,6 @@
 {
   "name": "elm-monitor",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Monitor your elm program with redux-devtools",
   "main": "dist/index.js",
   "source": "src/index.js",
