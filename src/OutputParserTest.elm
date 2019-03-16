@@ -89,9 +89,13 @@ suite =
                         Expect.pass
 
                     Err err ->
-                        let
-                            _ =
-                                Debug.log "err" err
-                        in
+                        Expect.fail "Couldn't parse"
+        , test "works with negative numbers" <|
+            \() ->
+                case parse "(SomeThingWithANumber -1, {})" of
+                    Ok _ ->
+                        Expect.pass
+
+                    Err err ->
                         Expect.fail "Couldn't parse"
         ]

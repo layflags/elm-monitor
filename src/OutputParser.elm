@@ -47,8 +47,8 @@ bool =
 -- NUMBER
 
 
-float : Parser JE.Value
-float =
+num : Parser Float
+num =
     number
         { int = Just toFloat
         , hex = Nothing
@@ -56,6 +56,16 @@ float =
         , binary = Nothing
         , float = Just identity
         }
+
+
+float : Parser JE.Value
+float =
+    oneOf
+        [ succeed negate
+            |. symbol "-"
+            |= num
+        , num
+        ]
         |> map JE.float
 
 
