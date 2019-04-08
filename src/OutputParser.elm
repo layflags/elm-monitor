@@ -4,6 +4,7 @@ import Char
 import Json.Encode as JE
 import Parser exposing (..)
 import Set
+import StringParser as SP
 
 
 parse : String -> Result (List DeadEnd) JE.Value
@@ -17,10 +18,7 @@ parse =
 
 string : Parser JE.Value
 string =
-    succeed JE.string
-        |. symbol "\""
-        |= (getChompedString <| chompWhile ((/=) '"'))
-        |. symbol "\""
+    map JE.string SP.string
 
 
 char : Parser JE.Value

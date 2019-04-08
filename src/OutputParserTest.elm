@@ -3,6 +3,7 @@ module OutputParserTest exposing (suite)
 import Expect
 import Json.Encode as JE
 import OutputParser exposing (parse)
+import ParserFix exposing (deadEndsToString)
 import Test exposing (..)
 
 
@@ -97,5 +98,13 @@ suite =
                         Expect.pass
 
                     Err err ->
-                        Expect.fail "Couldn't parse"
+                        Expect.fail <| deadEndsToString err
+        , test "works with strings that contain double quotes" <|
+            \() ->
+                case parse "\"\\\"\"" of
+                    Ok result ->
+                        result |> Expect.equal (JE.string "\"")
+
+                    Err err ->
+                        Expect.fail <| deadEndsToString err
         ]
