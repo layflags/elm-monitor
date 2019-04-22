@@ -18,4 +18,12 @@ suite =
 
                     Err err ->
                         Expect.fail <| deadEndsToString err
+        , test "works with strings that contain slashes" <|
+            \() ->
+                case Parser.run string "\"\\\\\"" of
+                    Ok result ->
+                        result |> Expect.equal "\\"
+
+                    Err err ->
+                        Expect.fail <| deadEndsToString err
         ]
