@@ -24,6 +24,7 @@ stringHelp revChunks =
                 [ map (\_ -> "\n") (token "n")
                 , map (\_ -> "\t") (token "t")
                 , map (\_ -> "\u{000D}") (token "r")
+                , map (\_ -> "\\") (token "\\")
                 , map (\_ -> "\"") (token "\"")
                 , succeed String.fromChar
                     |. token "u{"
