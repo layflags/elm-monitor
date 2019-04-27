@@ -2,6 +2,7 @@ module OutputParserTest exposing (suite)
 
 import Expect
 import Json.Encode as JE
+import Math.Vector3 as Vec3
 import OutputParser exposing (parse)
 import ParserFix exposing (deadEndsToString)
 import Test exposing (..)
@@ -107,4 +108,27 @@ suite =
 
                     Err err ->
                         Expect.fail <| deadEndsToString err
+        , test "works with vectors and matrices" <|
+            \() ->
+                case parse "{ 0 = 1, 1 = 2, 2 = 3 }" of
+                    Ok result ->
+                        result
+                            |> Expect.equal
+                                (JE.object
+                                    [ ( "0", JE.float 1 )
+                                    , ( "1", JE.float 2 )
+                                    , ( "2", JE.float 3 )
+                                    ]
+                                )
+
+                    Err err ->
+                        Expect.fail <| deadEndsToString err
+        , test "fails for negative vectors and matrix indices" <|
+            \() ->
+                parse "{ -1 = 1, 1 = 2, 2 = 3 }"
+                    |> Expect.err
+        , test "fails for out of range vectors and matrix indices" <|
+            \() ->
+                parse "{ 16 = 1, 1 = 2, 2 = 3 }"
+                    |> Expect.err
         ]

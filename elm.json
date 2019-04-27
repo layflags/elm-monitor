@@ -20,6 +20,7 @@
     },
     "test-dependencies": {
         "direct": {
+            "elm-explorations/linear-algebra": "1.0.3",
             "elm-explorations/test": "1.2.1"
         },
         "indirect": {

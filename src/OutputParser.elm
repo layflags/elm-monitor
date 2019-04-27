@@ -242,6 +242,50 @@ union =
 
 
 
+-- linear algebra
+
+
+vectorOrMatrix : Parser JE.Value
+vectorOrMatrix =
+    sequence
+        { start = "{"
+        , separator = ","
+        , end = "}"
+        , spaces = spaces
+        , item = indexValue
+        , trailing = Forbidden
+        }
+        |> map JE.object
+
+
+isBetween : Int -> Int -> Int -> Parser Int
+isBetween lower upper val =
+    if val >= lower && val <= upper then
+        succeed val
+
+    else
+        problem <|
+            String.join ""
+                [ "value "
+                , String.fromInt val
+                , " was not between "
+                , String.fromInt lower
+                , " and "
+                , String.fromInt upper
+                ]
+
+
+indexValue : Parser ( String, JE.Value )
+indexValue =
+    succeed Tuple.pair
+        |= (int |> andThen (isBetween 0 15) |> map String.fromInt)
+        |. spaces
+        |. symbol "="
+        |. spaces
+        |= float
+
+
+
 -- VALUE
 
 
@@ -253,7 +297,8 @@ value =
         , char
         , string
         , internals
-        , lazy (\() -> record)
+        , backtrackable <| lazy (\() -> record)
+        , vectorOrMatrix
         , lazy (\() -> list)
         , backtrackable <| lazy (\() -> tuple)
         , lazy (\() -> union)
