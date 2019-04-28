@@ -47,7 +47,7 @@ const install = () => {
       }
     })
     const consoleLog = window.console.log.bind(window.console)
-    window.console.log = async (...args) => {
+    window.console.log = (...args) => {
       const match =
         typeof args[0] === 'string' &&
         args[0].match(/^\[Monitor:(init|update)\]: (.+)$/)
@@ -56,20 +56,18 @@ const install = () => {
 
         switch (type) {
           case 'init':
-            try {
-              const result = await parse(content)
+            parse(content).then(result => {
               devtools.init(result)
-            } catch (e) {
+            }, e => {
               console.error(e)
-            }
+            })
             break
           case 'update':
-            try {
-              const [action, state] = await parse(content)
+            parse(content).then(([action,state]) => {
               devtools.send(toFSA(action), state)
-            } catch (e) {
+            }, e => {
               console.error(e)
-            }
+            })
             break
           default:
           // will never happen
