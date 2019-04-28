@@ -82,7 +82,7 @@ suite =
                 let
                     data =
                         """
-(GotHereAndNow (Zone 60 [],Posix 1549222093485),{ here = Zone 60 [], key = <function>, now = Posix 1549222093485, page = Home { url = { fragment = Nothing, host = "localhost", path = "/", port_ = Just 8080, protocol = Http, query = Nothing } } })
+(GotHereAndNow (Zone 60 [],Posix 1549222093485),{ here = Zone 60 [], key = <function>, now = Posix 1549222093485, page = Home { url = { fragment = Nothing, host = "localhost", path = "/", port_ = Just 8080, protocol = Http, query = Nothing } }, v = { 0 = 0, 1 = 0, 2 = 0 } })
                       """
                 in
                 case parse data of
@@ -90,7 +90,7 @@ suite =
                         Expect.pass
 
                     Err err ->
-                        Expect.fail "Couldn't parse"
+                        Expect.fail <| deadEndsToString err
         , test "works with negative numbers" <|
             \() ->
                 case parse "(SomeThingWithANumber -1, {})" of

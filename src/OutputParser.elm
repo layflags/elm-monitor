@@ -100,7 +100,7 @@ list =
 key : Parser String
 key =
     variable
-        { start = Char.isLower
+        { start = \c -> Char.isLower c || Char.isDigit c
         , inner = \c -> Char.isAlphaNum c || c == '_'
         , reserved = Set.empty
         }
