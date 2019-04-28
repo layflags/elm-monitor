@@ -56,18 +56,24 @@ const install = () => {
 
         switch (type) {
           case 'init':
-            parse(content).then(result => {
-              devtools.init(result)
-            }, e => {
-              console.error(e)
-            })
+            parse(content).then(
+              result => {
+                devtools.init(result)
+              },
+              e => {
+                console.error(e)
+              }
+            )
             break
           case 'update':
-            parse(content).then(([action,state]) => {
-              devtools.send(toFSA(action), state)
-            }, e => {
-              console.error(e)
-            })
+            parse(content).then(
+              ([action, state]) => {
+                devtools.send(toFSA(action), state)
+              },
+              e => {
+                console.error(e)
+              }
+            )
             break
           default:
           // will never happen
