@@ -31,8 +31,8 @@
   "devDependencies": {
     "elm": "^0.19.0-bugfix6",
     "elm-minify": "^2.0.4",
-    "elm-test": "^0.19.0-rev4",
-    "microbundle": "^0.9.0",
+    "elm-test": "^0.19.0",
+    "microbundle": "^0.11.0",
     "prettier-standard": "^9.1.1",
     "standard": "^12.0.1"
   }
